@@ -13,46 +13,62 @@ import com.notas.primerProyecto.entity.Nota;
 import com.notas.primerProyecto.model.MNota;
 import com.notas.primerProyecto.repository.NotaRepositorio;
 
-@Service("ServicioNota")
+@Service( "ServicioNota" )
 public class ServicioNota {
 
   @Autowired // -> 'Autowired' significa inyectar un bean
-  @Qualifier("NotaRepositorio") // -> Y con 'Qualifier' se sabe que bean inyectar
+  @Qualifier( "NotaRepositorio" ) // -> Y con 'Qualifier' se sabe que bean inyectar
   private NotaRepositorio repositorio;
 
   @Autowired
-  @Qualifier("ConvertidorNota")
+  @Qualifier( "ConvertidorNota" )
   private ConvertidorNota convertidor;
 
   // Creando el Log
 
-  public static final Log log = LogFactory.getLog(ServicioNota.class);
+  public static final Log log = LogFactory.getLog( ServicioNota.class );
 
   //A partir de aca ya empiezan los metodos para crear/modificar/borrar campos de las tablas
 
   // -> Para crear un registro (insert)
-  public String crear(Nota nota) {
-    try {
-      repositorio.save(nota);
-      log.info("Se ha agredado el registro con exito");
-      return "Se ha agregado el registro con exito.";
-    } catch (Exception e) {
-      log.error("No se ha agregado el registro");
-      return "No se pudo agregar el registro. Error: " + e.toString();
+  public String crear( Nota nota ) {
+    if( nota == null ) { 
+      log.error( "Los datos recividos no son una nota" );
+      return "Los datos recibidos no son una nota"; 
     }
+    try {
+      repositorio.save( nota );
+    } catch ( Exception e ) {
+      log.error( "Registro no realizado: " + e.toString() );
+      return "No se pudo agregar el registro.";
+    }
+    log.info( "Se ha agredado el registro con exito" );
+    return "Se ha agregado el registro con exito.";
   }
 
   // -> Para actualizar un registro (update)
-  public String actualizar(Nota nota) {
-    try {
-      Nota temporal = repositorio.findByNombre(nota.getNombre()); // Se encuentra la nota en la base de datos
-      temporal.setTitulo(nota.getTitulo());
-      temporal.setContenido(nota.getContenido());
-      repositorio.save(temporal);
-      return "Registro modificado con exito";
-    } catch (Exception e) {
-      return "No se pudo actualizar el registro. Error: " + e.toString();
+  public String actualizar( Nota nota ) {
+    if ( nota == null || nota.getNombre() == null ) {
+      log.error( "Nota no válida." );
+      return "Nota no válida";
     }
+    Nota temporal;
+    try {
+      temporal = repositorio.findByNombre( nota.getNombre() ); // Se encuentra la nota en la base de datos
+    } catch ( Exception e ) { 
+      log.error( "La nota a buscar no existe: " + e.toString() );
+      return "La nota a buscar no existe.";
+    }
+    if ( nota.getTitulo() == null || nota.getTitulo().length() == 0 ) {
+      log.error("El titulo de la nota es inválido: ");
+      return "El titulo de la nota es invalido";
+    } else {
+      temporal.setTitulo( nota.getTitulo() );
+    }
+    temporal.setTitulo( nota.getTitulo() );
+    temporal.setContenido( nota.getContenido() );
+    repositorio.save( temporal );
+    return "Registro modificado con exito";
   }
 
   // -> Para borrar un registro (delete)

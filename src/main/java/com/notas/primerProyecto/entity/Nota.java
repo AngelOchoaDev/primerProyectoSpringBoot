@@ -25,13 +25,13 @@ public class Nota implements Serializable {
   @Column(name = "ID_NOTA")
   private int id;
 
-  @Column(name = "NOMBRE",unique = true)
+  @Column(name = "NOMBRE",unique = true, nullable = false)
   private String nombre;
   
-  @Column(name = "TITULO")
+  @Column(name = "TITULO", nullable = false)
   private String titulo;
 
-  @Column(name = "CONTENIDO")
+  @Column(name = "CONTENIDO", nullable = false)
   private String contenido;
 
   //Metodos get y set
