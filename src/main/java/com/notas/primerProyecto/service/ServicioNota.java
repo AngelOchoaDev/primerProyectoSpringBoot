@@ -48,38 +48,41 @@ public class ServicioNota {
 
   // -> Para actualizar un registro (update)
   public String actualizar( Nota nota ) {
-    if ( nota == null || nota.getNombre() == null ) {
+    //-> Comprobacion de erorres en la nota recibida
+    if ( nota == null || nota.getNombre().length() == 0 || nota.getTitulo().length() == 0 || nota.getContenido().length()== 0 ) {
       log.error( "Nota no válida." );
       return "Nota no válida";
     }
+
     Nota temporal;
     try {
       temporal = repositorio.findByNombre( nota.getNombre() ); // Se encuentra la nota en la base de datos
+      temporal.setTitulo( nota.getTitulo() );
+      temporal.setContenido( nota.getContenido() );
+      repositorio.save( temporal );
     } catch ( Exception e ) { 
       log.error( "La nota a buscar no existe: " + e.toString() );
       return "La nota a buscar no existe.";
     }
-    if ( nota.getTitulo() == null || nota.getTitulo().length() == 0 ) {
-      log.error("El titulo de la nota es inválido: ");
-      return "El titulo de la nota es invalido";
-    } else {
-      temporal.setTitulo( nota.getTitulo() );
-    }
-    temporal.setTitulo( nota.getTitulo() );
-    temporal.setContenido( nota.getContenido() );
-    repositorio.save( temporal );
     return "Registro modificado con exito";
   }
 
   // -> Para borrar un registro (delete)
-  public String borrar(String nombre, long id) {
+  public String borrar( String nombre, long id ) {
+    if ( nombre == null || id == 0 ) {
+      log.error( "Los valores ingresados son incorrectos." );
+      return "Los valores ingresados son incorrectos";
+    }
+
+    Nota nota;
     try {
-      Nota nota = repositorio.findByNombreAndId(nombre, id);
-      repositorio.delete(nota);
-      return "El registro se elimino con exito.";
-    } catch (Exception e) {
+      nota = repositorio.findByNombreAndId( nombre, id );
+      repositorio.delete( nota );
+    } catch ( Exception e ) {
+      log.error( "No se encontró el registro: " + e.toString() );
       return "No se encontro el registro.";
     }
+    return "El registro se elimino con exito.";
   }
 
   // -> Para obtener registros (select)
@@ -95,10 +98,12 @@ public class ServicioNota {
      * de entidades de la clase 'Nota' y las convierte a modelos de la clase 'MNota'
      */
 
-    return convertidor.convertirLista(repositorio.findAll());
+    List<MNota> notas = convertidor.convertirLista( repositorio.findAll() );
+    log.info( "La petición a la base de datos retornó " + notas.size() + " nota(s)." );
+    return notas;
   }
 
-  public MNota obtenerPorNombreYTitulo(String nombre, String titulo) {
+  public MNota obtenerPorNombreYTitulo( String nombre, String titulo ) {
 
     /*
      * Anotaciones:
@@ -110,7 +115,19 @@ public class ServicioNota {
      * 
      */
 
-    return new MNota(repositorio.findByNombreAndTitulo(nombre, titulo));
+    if(nombre.length() == 0 || titulo.length() == 0 ) {
+      log.error( "Datos de entrada invalidos." );
+      return null;
+    }
+    Nota nota;
+    try {
+      nota = repositorio.findByNombreAndTitulo( nombre, titulo );
+    } catch (Exception e) {
+      log.error( "No se encontró una nota con los datos proporcionados: " + e.toString() );
+      return null;
+    }
+    log.info( "Se encontro la nota: " + nota.toString() );
+    return new MNota( nota );
   }
 
   public List<MNota> obtenerNotasPorTitulo(String titulo) {
@@ -125,6 +142,10 @@ public class ServicioNota {
      * toma esta lista de entidades y las convierte en una lista de modelos.
      */
 
+    if ( titulo.length() == 0 || titulo == null ) { 
+      log.error( "Error, datos de entrada inválidos." );
+      return null;
+    }
     return convertidor.convertirLista(repositorio.findByTitulo(titulo));
   }
 }
