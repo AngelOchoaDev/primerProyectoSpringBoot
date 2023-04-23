@@ -85,24 +85,6 @@ public class ServicioNota {
     return "El registro se elimino con exito.";
   }
 
-  // -> Para obtener registros (select)
-  public List<MNota> obtenerTodasLasNotas() {
-
-    /*
-     * Anotaciones:
-     * 
-     * El metodo 'repositorio.findAll()' obtiene todos los registros de la base
-     * de datos a traves de una consulta y las retorna en instancias de la clase 'Nota'.
-     * 
-     * Lo que hace el convertidor es recibir como parametro esa lista de instancias en forma
-     * de entidades de la clase 'Nota' y las convierte a modelos de la clase 'MNota'
-     */
-
-    List<MNota> notas = convertidor.convertirLista( repositorio.findAll() );
-    log.info( "La petición a la base de datos retornó " + notas.size() + " nota(s)." );
-    return notas;
-  }
-
   public MNota obtenerPorNombreYTitulo( String nombre, String titulo ) {
 
     /*
@@ -126,8 +108,32 @@ public class ServicioNota {
       log.error( "No se encontró una nota con los datos proporcionados: " + e.toString() );
       return null;
     }
-    log.info( "Se encontro la nota: " + nota.toString() );
+    log.info( "Se encontro la nota: " + nota.getId() );
     return new MNota( nota );
+  }
+
+  // -> Para obtener registros (select)
+  public List<MNota> obtenerTodasLasNotas() {
+
+    /*
+     * Anotaciones:
+     * 
+     * El metodo 'repositorio.findAll()' obtiene todos los registros de la base
+     * de datos a traves de una consulta y las retorna en instancias de la clase 'Nota'.
+     * 
+     * Lo que hace el convertidor es recibir como parametro esa lista de instancias en forma
+     * de entidades de la clase 'Nota' y las convierte a modelos de la clase 'MNota'
+     */
+
+    List<MNota> notas;
+    try {
+      notas = convertidor.convertirLista( repositorio.findAll() );
+    } catch (Exception e) {
+      log.error( "Hubo un error en la peticion a la base de datos: " + e.toString() );
+      return null;
+    }
+    log.info( "La petición a la base de datos retornó " + notas.size() + " nota(s)." );
+    return notas;
   }
 
   public List<MNota> obtenerNotasPorTitulo(String titulo) {
@@ -146,6 +152,14 @@ public class ServicioNota {
       log.error( "Error, datos de entrada inválidos." );
       return null;
     }
-    return convertidor.convertirLista(repositorio.findByTitulo(titulo));
+    List<Nota> notas;
+    try {
+      notas = repositorio.findByTitulo(titulo);
+    } catch (Exception e) {
+      log.error( "No se encontró ninguna nota con ese título: " + e.toString() );
+      return null;
+    }
+    log.info("La petición a la base de datos retornó " + notas.size() + " nota(s)." );
+    return convertidor.convertirLista( notas );
   }
 }

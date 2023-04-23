@@ -12,34 +12,48 @@ import com.notas.primerProyecto.service.ServicioNota;
 
 
 @RestController
-@RequestMapping("/v1")
+@RequestMapping( "/v1" )
 public class ControllerNota {
 
 	// Agregamos Bean del servicio
 	@Autowired
-	@Qualifier("ServicioNota")
+	@Qualifier( "ServicioNota" )
 	ServicioNota servicioNota;
 
-	@PutMapping("/nota")
-	public String actualizarNota(@RequestBody Nota nota) {
-		return servicioNota.actualizar(nota);
+	// Para actualizar una nota
+	@PutMapping( "/nota" )
+	public String actualizarNota( @RequestBody Nota nota ) {
+		return servicioNota.actualizar( nota );
 	}
 
-	@PostMapping("/nota")
-	public String agregarNota(@RequestBody Nota nota) {
-		return servicioNota.crear(nota);
+	// Para publicar una nota
+	@PostMapping( "/nota" )
+	public String agregarNota( @RequestBody Nota nota ) {
+		return servicioNota.crear( nota );
 	}
 
-	@DeleteMapping("/nota/{id}/{nombre}")
-	public String borrarNota(@PathVariable("nombre") String nombre, @PathVariable("id") long id) {
-		return servicioNota.borrar(nombre, id);
+	// Para borrar una nota
+	@DeleteMapping( "/nota/{id}/{nombre}" )
+	public String borrarNota( @PathVariable("nombre") String nombre, @PathVariable("id") long id ) {
+		return servicioNota.borrar( nombre, id );
 	}
 
-	@GetMapping("/notas")
+	// Para obtener una nota por nombre y por título
+	@GetMapping("/nota/{nombre}/{titulo}")
+	public MNota obtenerNotaPorNombreYTitulo( @PathVariable("nombre") String nombre, @PathVariable("titulo") String titulo ) {
+		return servicioNota.obtenerPorNombreYTitulo( nombre, titulo );
+	}
+
+	// Para obtener todas las notas
+	@GetMapping( "/notas" )
 	public List<MNota> obtenerNotas() {
 		return servicioNota.obtenerTodasLasNotas();
 	}
 
+
+
+
+	// Para probar que el servicio este online
 	@GetMapping("/hello")
 	public String hello( @RequestParam( value = "name", defaultValue = "world" ) String name, @RequestParam( value = "target", defaultValue = "fools" ) String target) {
 		return String.format("Hello %s, %s!", name, target);
