@@ -34,13 +34,13 @@ public class ControllerNota {
 
 	// Para borrar una nota
 	@DeleteMapping( "/nota/{id}/{nombre}" )
-	public String borrarNota( @PathVariable("nombre") String nombre, @PathVariable("id") long id ) {
+	public String borrarNota( @PathVariable( "nombre" ) String nombre, @PathVariable( "id" ) long id ) {
 		return servicioNota.borrar( nombre, id );
 	}
 
 	// Para obtener una nota por nombre y por título
 	@GetMapping("/nota/{nombre}/{titulo}")
-	public MNota obtenerNotaPorNombreYTitulo( @PathVariable("nombre") String nombre, @PathVariable("titulo") String titulo ) {
+	public MNota obtenerNotaPorNombreYTitulo( @PathVariable( "nombre" ) String nombre, @PathVariable( "titulo" ) String titulo ) {
 		return servicioNota.obtenerPorNombreYTitulo( nombre, titulo );
 	}
 
@@ -50,12 +50,14 @@ public class ControllerNota {
 		return servicioNota.obtenerTodasLasNotas();
 	}
 
-
-
+	@GetMapping( "/notas/{titulo}" )
+	public List<MNota> obtenerNotasTitulo( @PathVariable( "titulo" ) String titulo ) {
+		return servicioNota.obtenerNotasPorTitulo( titulo );
+	}
 
 	// Para probar que el servicio este online
 	@GetMapping("/hello")
-	public String hello( @RequestParam( value = "name", defaultValue = "world" ) String name, @RequestParam( value = "target", defaultValue = "fools" ) String target) {
-		return String.format("Hello %s, %s!", name, target);
+	public String hello( @RequestParam( value = "name", defaultValue = "world" ) String name, @RequestParam( value = "target", defaultValue = "fools" ) String target ) {
+		return String.format( "Hello %s, %s!", name, target );
 	}
 }

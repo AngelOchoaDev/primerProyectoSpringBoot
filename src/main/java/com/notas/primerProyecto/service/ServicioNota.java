@@ -105,7 +105,7 @@ public class ServicioNota {
     try {
       nota = repositorio.findByNombreAndTitulo( nombre, titulo );
     } catch (Exception e) {
-      log.error( "No se encontró una nota con los datos proporcionados: " + e.toString() );
+      log.error( "No se encontro una nota con los datos proporcionados: " + e.toString() );
       return null;
     }
     log.info( "Se encontro la nota: " + nota.getId() );
@@ -132,11 +132,12 @@ public class ServicioNota {
       log.error( "Hubo un error en la peticion a la base de datos: " + e.toString() );
       return null;
     }
-    log.info( "La petición a la base de datos retornó " + notas.size() + " nota(s)." );
+    log.info( "La peticion a la base de datos retorno " + notas.size() + " nota(s)." );
     return notas;
   }
 
-  public List<MNota> obtenerNotasPorTitulo(String titulo) {
+  // -> Para obtener un conjunto de registros que compartan el mismo nombre (SELECT * FROM notas WHERE titulo = titulo)
+  public List<MNota> obtenerNotasPorTitulo( String titulo ) {
 
     /* 
      * Anotaciones:
@@ -148,18 +149,23 @@ public class ServicioNota {
      * toma esta lista de entidades y las convierte en una lista de modelos.
      */
 
+    log.info( "Se buscan notas con el titulo: " + titulo );
     if ( titulo.length() == 0 || titulo == null ) { 
       log.error( "Error, datos de entrada inválidos." );
       return null;
     }
     List<Nota> notas;
     try {
-      notas = repositorio.findByTitulo(titulo);
+      notas = repositorio.findByTitulo( titulo );
     } catch (Exception e) {
-      log.error( "No se encontró ninguna nota con ese título: " + e.toString() );
+      log.error( "Hubo un error en la peticion a la base de datos: " + e.toString() );
       return null;
     }
-    log.info("La petición a la base de datos retornó " + notas.size() + " nota(s)." );
+    if( notas.size() == 0 ) {
+      log.info("No se encontraron notas en la base de datos.");
+      return null;
+    }
+    log.info("La peticion a la base de datos retorno " + notas.size() + " nota(s)." );
     return convertidor.convertirLista( notas );
   }
 }

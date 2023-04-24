@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import com.notas.primerProyecto.entity.Nota;
 
-@Repository("NotaRepositorio")
+@Repository( "NotaRepositorio" )
 public interface NotaRepositorio extends JpaRepository<Nota, Serializable> {
 
   /*
@@ -29,13 +29,13 @@ public interface NotaRepositorio extends JpaRepository<Nota, Serializable> {
    */
   
   //Query para encontrar por nombre
-  public abstract Nota findByNombre(String nombre);
+  public abstract Nota findByNombre( String nombre );
 
   //Query para encontrar por titulo
-  public abstract List<Nota> findByTitulo(String titulo);
+  public abstract List<Nota> findByTitulo( String titulo );
 
   //Query para encontrar por nombre y por titulo
-  public abstract Nota findByNombreAndTitulo(String nombre, String titulo);
+  public abstract Nota findByNombreAndTitulo( String nombre, String titulo );
 
-  public abstract Nota findByNombreAndId(String nombre, long id);
+  public abstract Nota findByNombreAndId( String nombre, long id );
 }

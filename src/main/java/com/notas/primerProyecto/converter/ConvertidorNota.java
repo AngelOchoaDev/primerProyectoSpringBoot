@@ -8,13 +8,15 @@ import org.springframework.stereotype.Component;
 import com.notas.primerProyecto.entity.Nota;
 import com.notas.primerProyecto.model.MNota;
 
-@Component("ConvertidorNota")
+@Component( "ConvertidorNota" )
 public class ConvertidorNota {
-  public List<MNota> convertirLista(List<Nota> notas){
+
+  public List<MNota> convertirLista( List<Nota> notas ) {
     List<MNota> mNotas = new ArrayList<>();
-    for (Nota nota : notas) {
-      mNotas.add(new MNota(nota));
+    for ( Nota nota : notas ) {
+      mNotas.add( new MNota(nota) );
     }
     return mNotas;
   }
+
 }
