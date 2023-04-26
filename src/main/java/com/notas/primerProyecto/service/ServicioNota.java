@@ -6,6 +6,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.notas.primerProyecto.converter.ConvertidorNota;
@@ -16,13 +17,13 @@ import com.notas.primerProyecto.repository.NotaRepositorio;
 @Service( "ServicioNota" )
 public class ServicioNota {
 
-  @Autowired // -> 'Autowired' significa inyectar un bean
+  @Autowired // -> 'Autowired' significa que se autoconecta a los componentes
   @Qualifier( "NotaRepositorio" ) // -> Y con 'Qualifier' se sabe que bean inyectar
-  private NotaRepositorio repositorio;
+  private NotaRepositorio repositorioNota;
 
   @Autowired
   @Qualifier( "ConvertidorNota" )
-  private ConvertidorNota convertidor;
+  private ConvertidorNota convertidorNota;
 
   // Creando el Log
 
@@ -32,12 +33,8 @@ public class ServicioNota {
 
   // -> Para crear un registro (insert)
   public String crear( Nota nota ) {
-    if( nota == null ) { 
-      log.error( "Los datos recividos no son una nota" );
-      return "Los datos recibidos no son una nota"; 
-    }
     try {
-      repositorio.save( nota );
+      repositorioNota.save( nota );
     } catch ( Exception e ) {
       log.error( "Registro no realizado: " + e.toString() );
       return "No se pudo agregar el registro.";
@@ -56,10 +53,10 @@ public class ServicioNota {
 
     Nota temporal;
     try {
-      temporal = repositorio.findByNombre( nota.getNombre() ); // Se encuentra la nota en la base de datos
+      temporal = repositorioNota.findByNombre( nota.getNombre() ); // Se encuentra la nota en la base de datos
       temporal.setTitulo( nota.getTitulo() );
       temporal.setContenido( nota.getContenido() );
-      repositorio.save( temporal );
+      repositorioNota.save( temporal );
     } catch ( Exception e ) { 
       log.error( "La nota a buscar no existe: " + e.toString() );
       return "La nota a buscar no existe.";
@@ -76,8 +73,8 @@ public class ServicioNota {
 
     Nota nota;
     try {
-      nota = repositorio.findByNombreAndId( nombre, id );
-      repositorio.delete( nota );
+      nota = repositorioNota.findByNombreAndId( nombre, id );
+      repositorioNota.delete( nota );
     } catch ( Exception e ) {
       log.error( "No se encontró el registro: " + e.toString() );
       return "No se encontro el registro.";
@@ -103,7 +100,7 @@ public class ServicioNota {
     }
     Nota nota;
     try {
-      nota = repositorio.findByNombreAndTitulo( nombre, titulo );
+      nota = repositorioNota.findByNombreAndTitulo( nombre, titulo );
     } catch (Exception e) {
       log.error( "No se encontro una nota con los datos proporcionados: " + e.toString() );
       return null;
@@ -123,11 +120,14 @@ public class ServicioNota {
      * 
      * Lo que hace el convertidor es recibir como parametro esa lista de instancias en forma
      * de entidades de la clase 'Nota' y las convierte a modelos de la clase 'MNota'
+     * 
+     * Esto esta obsoleto, ya que si mi repositorio me retornanara una lista de
+     * entidades enorme este metodo saturaria la query, por ello se utiliza la paginacion
      */
 
     List<MNota> notas;
     try {
-      notas = convertidor.convertirLista( repositorio.findAll() );
+      notas = convertidorNota.convertirLista( repositorioNota.findAll() );
     } catch (Exception e) {
       log.error( "Hubo un error en la peticion a la base de datos: " + e.toString() );
       return null;
@@ -137,7 +137,7 @@ public class ServicioNota {
   }
 
   // -> Para obtener un conjunto de registros que compartan el mismo nombre (SELECT * FROM notas WHERE titulo = titulo)
-  public List<MNota> obtenerNotasPorTitulo( String titulo ) {
+  public List<MNota> obtenerNotasPorTitulo( String titulo, Pageable pageable ) {
 
     /* 
      * Anotaciones:
@@ -150,13 +150,13 @@ public class ServicioNota {
      */
 
     log.info( "Se buscan notas con el titulo: " + titulo );
-    if ( titulo.length() == 0 || titulo == null ) { 
-      log.error( "Error, datos de entrada inválidos." );
-      return null;
-    }
+    // if ( titulo.length() == 0 || titulo == null ) { 
+    //   log.error( "Error, datos de entrada inválidos." );
+    //   return null;
+    // }
     List<Nota> notas;
     try {
-      notas = repositorio.findByTitulo( titulo );
+      notas = repositorioNota.findByTitulo( titulo, pageable ).getContent();
     } catch (Exception e) {
       log.error( "Hubo un error en la peticion a la base de datos: " + e.toString() );
       return null;
@@ -166,6 +166,10 @@ public class ServicioNota {
       return null;
     }
     log.info("La peticion a la base de datos retorno " + notas.size() + " nota(s)." );
-    return convertidor.convertirLista( notas );
+    return convertidorNota.convertirLista( notas );
+  }
+
+  public List<MNota> obtenerPorPaginacion( Pageable pageable ) {
+    return convertidorNota.convertirLista( repositorioNota.findAll( pageable ).getContent() );
   }
 }
