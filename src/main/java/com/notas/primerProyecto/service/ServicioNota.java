@@ -66,12 +66,9 @@ public class ServicioNota {
 
   // -> Para borrar un registro (delete)
   public String borrar( String nombre, long id ) {
-    if ( nombre == null || id == 0 ) {
-      log.error( "Los valores ingresados son incorrectos." );
-      return "Los valores ingresados son incorrectos";
-    }
 
     Nota nota;
+
     try {
       nota = repositorioNota.findByNombreAndId( nombre, id );
       repositorioNota.delete( nota );
@@ -94,10 +91,6 @@ public class ServicioNota {
      * 
      */
 
-    if(nombre.length() == 0 || titulo.length() == 0 ) {
-      log.error( "Datos de entrada invalidos." );
-      return null;
-    }
     Nota nota;
     try {
       nota = repositorioNota.findByNombreAndTitulo( nombre, titulo );

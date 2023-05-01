@@ -3,13 +3,14 @@ package com.notas.primerProyecto.entity;
 import java.io.Serializable;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 
 @Entity
 public class Nota implements Serializable {
 
   //Constructores
   public Nota() {
-    
+
   }
 
   public Nota( String nombre, String titulo, String contenido ) {
@@ -25,12 +26,15 @@ public class Nota implements Serializable {
   @Column( name = "ID_NOTA" )
   private int id;
 
+  @NotNull
   @Column( name = "NOMBRE",unique = true, nullable = false )
   private String nombre;
   
+  @NotNull
   @Column( name = "TITULO", nullable = false )
   private String titulo;
 
+  @NotNull
   @Column( name = "CONTENIDO", nullable = false )
   private String contenido;
 
