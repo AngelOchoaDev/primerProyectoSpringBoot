@@ -1,0 +1,7 @@
+Estructura Básica (Entidad, modelo, convertidor, repositorio, controlador y servicios)
+MétodosHTTP (Get, put, post, delete)
+Servicios (findAll, findById, etc)
+Paginación
+Records como modelo
+Validación por calificadores (valid, notNull, etc)
+Autenticacion por tokens
