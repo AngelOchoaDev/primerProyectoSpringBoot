@@ -2,7 +2,7 @@ package com.notas.primerProyecto.notas.model;
 
 import com.notas.primerProyecto.notas.entity.Nota;
 
-public record MNota(long id, String nombre, String titulo, String contenido) {
+public record MNota(long id, String nombre, String titulo, String contenido, long inEstatus) {
 
   public MNota {
     // Objects.requireNonNull(nombre, "El campo de nombre no puede estar vacio");
@@ -11,6 +11,6 @@ public record MNota(long id, String nombre, String titulo, String contenido) {
   }
 
   public MNota(Nota nota) {
-    this(nota.getId(),nota.getNombre(),nota.getTitulo(),nota.getContenido());
+    this(nota.getIdNota(),nota.getNombre(),nota.getTitulo(),nota.getContenido(), nota.getIdEstatus());
   }
 }

@@ -11,7 +11,7 @@ public class Nota implements Serializable {
   @GeneratedValue( strategy = GenerationType.AUTO )
   @Id
   @Column( name = "ID_NOTA" )
-  private int id;
+  private int idNota;
   
   @Column( name = "NOMBRE" )
   private String nombre;
@@ -22,24 +22,28 @@ public class Nota implements Serializable {
   @Column( name = "CONTENIDO" )
   private String contenido;
 
+  @Column( name = "ID_ESTATUS" )
+  private long idEstatus;
+
   //Constructores
   public Nota() {
 
   }
 
-  public Nota( String nombre, String titulo, String contenido ) {
+  public Nota( String nombre, String titulo, String contenido, long idEstatus ) {
     super();
     this.nombre = nombre;
     this.titulo = titulo;
     this.contenido = contenido;
+    this.idEstatus = idEstatus;
   }
 
-  public int getId() {
-    return id;
+  public int getIdNota() {
+    return idNota;
   }
 
-  public void setId(int id) {
-    this.id = id;
+  public void setIdNota(int id) {
+    this.idNota = id;
   }
 
   public String getNombre() {
@@ -64,6 +68,14 @@ public class Nota implements Serializable {
 
   public void setContenido(String contenido) {
     this.contenido = contenido;
+  }
+
+  public long getIdEstatus() {
+    return idEstatus;
+  }
+
+  public void setIdEstatus(long idEstus) {
+    this.idEstatus = idEstus;
   }
 
   
