@@ -1,4 +1,4 @@
-package com.notas.primerProyecto.entity;
+package com.notas.primerProyecto.usuarios.entity;
 
 import java.io.Serializable;
 

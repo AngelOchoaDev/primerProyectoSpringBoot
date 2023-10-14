@@ -1,4 +1,4 @@
-package com.notas.primerProyecto.repository;
+package com.notas.primerProyecto.notas.repository;
 
 import java.io.Serializable;
 
@@ -7,11 +7,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.notas.primerProyecto.entity.Nota;
+import com.notas.primerProyecto.notas.entity.Nota;
 
 @Repository( "NotaRepositorio" )
-
-// extends JpaRepository<Nota, Serializable>
 public interface NotaRepositorio extends JpaRepository<Nota, Serializable> {
 
   /*
@@ -43,7 +41,7 @@ public interface NotaRepositorio extends JpaRepository<Nota, Serializable> {
   public abstract Nota findByNombreAndTitulo( String nombre, String titulo );
 
   //Query para encontrar notas por nombre e id
-  public abstract Nota findByNombreAndId( String nombre, long id );
+  public abstract Nota findById( long id );
 
   //Query para encontrar varias notas con un titulo
   public abstract Page<Nota> findByTitulo( String titulo, Pageable pageable );

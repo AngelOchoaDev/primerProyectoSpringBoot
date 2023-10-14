@@ -1,11 +1,13 @@
 package com.notas.primerProyecto.configuration;
 
 // import org.springframework.context.annotation.Configuration;
-// import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-// import org.springframework.security.config.annotation.web.configuration.WebSecurityConfiguration;
+// import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 // @Configuration
-// @EnableWebSecurity
-// public class WebSecurity extends WebSecurityConfiguration {
-
+// public class WebSecurity implements WebMvcConfigurer {
+  
+//   @Override
+//   public void addCorsMappings(registry: CorsRegistry) {
+//     registry.addMapping("/**").allowedMethods("*");
+//   }
 // }

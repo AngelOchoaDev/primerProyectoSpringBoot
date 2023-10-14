@@ -1,12 +1,12 @@
-package com.notas.primerProyecto.converter;
+package com.notas.primerProyecto.notas.converter;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.stereotype.Component;
 
-import com.notas.primerProyecto.entity.Nota;
-import com.notas.primerProyecto.model.MNota;
+import com.notas.primerProyecto.notas.entity.Nota;
+import com.notas.primerProyecto.notas.model.MNota;
 
 @Component( "ConvertidorNota" )
 public class ConvertidorNota {

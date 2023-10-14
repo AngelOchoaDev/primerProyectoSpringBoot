@@ -1,4 +1,4 @@
-package com.notas.primerProyecto.service;
+package com.notas.primerProyecto.notas.service;
 
 import java.util.List;
 
@@ -9,10 +9,10 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import com.notas.primerProyecto.converter.ConvertidorNota;
-import com.notas.primerProyecto.entity.Nota;
-import com.notas.primerProyecto.model.MNota;
-import com.notas.primerProyecto.repository.NotaRepositorio;
+import com.notas.primerProyecto.notas.converter.ConvertidorNota;
+import com.notas.primerProyecto.notas.entity.Nota;
+import com.notas.primerProyecto.notas.model.MNota;
+import com.notas.primerProyecto.notas.repository.NotaRepositorio;
 
 @Service( "ServicioNota" )
 public class ServicioNota {
@@ -36,7 +36,7 @@ public class ServicioNota {
     try {
       repositorioNota.save( nota );
     } catch ( Exception e ) {
-      log.error( "Registro no realizado: " + e.toString() );
+      e.printStackTrace();
       return "No se pudo agregar el registro.";
     }
     log.info( "Se ha agredado el registro con exito" );
@@ -65,12 +65,12 @@ public class ServicioNota {
   }
 
   // -> Para borrar un registro (delete)
-  public String borrar( String nombre, long id ) {
+  public String borrar( long id ) {
 
     Nota nota;
 
     try {
-      nota = repositorioNota.findByNombreAndId( nombre, id );
+      nota = repositorioNota.findById(id);
       repositorioNota.delete( nota );
     } catch ( Exception e ) {
       log.error( "No se encontró el registro: " + e.toString() );
@@ -164,5 +164,9 @@ public class ServicioNota {
 
   public List<MNota> obtenerPorPaginacion( Pageable pageable ) {
     return convertidorNota.convertirLista( repositorioNota.findAll( pageable ).getContent() );
+  }
+
+  public Nota getNotaById(long id) {
+    return this.repositorioNota.findById(id);
   }
 }
